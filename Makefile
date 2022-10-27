@@ -5,7 +5,7 @@ unit-test:
 	ginkgo -r
 	
 start-dev-db-linux:
-	docker run --name mysql-ec-dev -d \
+	docker start mysql-ec-dev || docker run --name mysql-ec-dev -d \
         -p 3306:3306 \
         -e MYSQL_ROOT_PASSWORD=P@ssw0rd \
         --restart unless-stopped \
@@ -14,7 +14,7 @@ start-dev-db-linux:
 
 #not try yet
 start-dev-db-window:
-	docker run --name mysql-ec-dev -d \
+	docker start mysql-ec-dev || docker run --name mysql-ec-dev -d \
         -p 3306:3306 \
         -e MYSQL_ROOT_PASSWORD=P@ssw0rd \
         --restart unless-stopped \

@@ -3,14 +3,14 @@ USE devDB
 
 CREATE TABLE Province
 (
-    ProvinceID INTEGER,
+    ProvinceID INTEGER NOT NULL AUTO_INCREMENT,
     Name VARCHAR(255),
     PRIMARY KEY (ProvinceID)
 );
 
 CREATE TABLE District
 (
-    DistrictID INTEGER,
+    DistrictID INTEGER NOT NULL AUTO_INCREMENT,
     Name VARCHAR(255),
     ProvinceID INTEGER,
     CONSTRAINT fk_province FOREIGN KEY (ProvinceID) REFERENCES Province(ProvinceID),
@@ -32,7 +32,7 @@ CREATE TABLE Population
 
 CREATE TABLE Candidate
 (
-    ID INTEGER,
+    ID INTEGER NOT NULL AUTO_INCREMENT,
     CitizenID BIGINT,
     CONSTRAINT fk_citizen_candidate FOREIGN KEY (CitizenID) REFERENCES Population(CitizenID),
     PRIMARY KEY (ID)
@@ -40,7 +40,7 @@ CREATE TABLE Candidate
 
 CREATE TABLE Mp
 (
-    ID INTEGER,
+    ID INTEGER NOT NULL AUTO_INCREMENT,
     CitizenID BIGINT,
     CONSTRAINT fk_citizen_mp FOREIGN KEY (CitizenID) REFERENCES Population(CitizenID),
     PRIMARY KEY (ID)
