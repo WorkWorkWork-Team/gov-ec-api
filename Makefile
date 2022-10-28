@@ -3,9 +3,9 @@ run:
 
 unit-test:
 	ginkgo -r
-	
+
 start-dev-db-linux:
-	docker start mysql-ec-dev || docker run --name mysql-ec-dev -d \
+	docker start mysql-dev || docker run --name mysql-dev -d \
         -p 3306:3306 \
         -e MYSQL_ROOT_PASSWORD=P@ssw0rd \
         --restart unless-stopped \
@@ -14,7 +14,7 @@ start-dev-db-linux:
 
 #not try yet
 start-dev-db-window:
-	docker start mysql-ec-dev || docker run --name mysql-ec-dev -d \
+	docker start mysql-dev || docker run --name mysql-dev -d \
         -p 3306:3306 \
         -e MYSQL_ROOT_PASSWORD=P@ssw0rd \
         --restart unless-stopped \
@@ -22,4 +22,4 @@ start-dev-db-window:
         mysql:latest
 
 start-dev-php-admin:
-	docker run --name phpmyadmin-ec -d --link mysql-ec-dev:db -p 8080:80 phpmyadmin/phpmyadmin
+	docker start phpmyadmin || docker run --name phpmyadmin -d --link mysql-dev:db -p 8080:80 phpmyadmin/phpmyadmin
