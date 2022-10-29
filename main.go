@@ -37,6 +37,10 @@ func main() {
 	populationHandler := handler.NewPopulationHandler(populationService)
 
 	server := gin.Default()
-	server.GET("/population/statistic/", populationHandler.GetPopulationStatistics)
+	server.Use(handler.ValidateAPIKey(appConfig.API_KEY))
+	{
+		server.GET("/population/statistic/", populationHandler.GetPopulationStatistics)
+	}
 	server.Run(fmt.Sprint(":", appConfig.LISTENING_PORT))
+
 }
