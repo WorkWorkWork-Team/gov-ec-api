@@ -3,7 +3,9 @@ module github.com/WorkWorkWork-Team/gov-ec-api
 go 1.19
 
 require (
-	github.com/WorkWorkWork-Team/common-go v0.3.0
+	github.com/WorkWorkWork-Team/common-go v0.3.2
+	github.com/gin-gonic/gin v1.8.1
+	github.com/jmoiron/sqlx v1.3.5
 	github.com/joho/godotenv v1.4.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/onsi/ginkgo/v2 v2.3.1
@@ -13,7 +15,6 @@ require (
 
 require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/gin-gonic/gin v1.8.1 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.11.1 // indirect

@@ -17,5 +17,6 @@ func NewPopulationService(populationRepository repository.PopulationRepository) 
 }
 
 func (p *populationService) GetTotalPopulation() bool {
+	p.populationRepository.GetTotalNumPopulation()
 	return false
 }

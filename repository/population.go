@@ -1,28 +1,42 @@
 package repository
 
 import (
-	"database/sql"
-	"fmt"
+	"github.com/jmoiron/sqlx"
+	"github.com/sirupsen/logrus"
 )
 
 type populationRepository struct {
-	mysql *sql.DB
+	mysql *sqlx.DB
 }
 
 type PopulationRepository interface {
+	GetTotalNumPopulation() (ResponseTotalPop, error)
 }
 
-func NewPopulationRepository(mysql *sql.DB) PopulationRepository {
+func NewPopulationRepository(mysql *sqlx.DB) PopulationRepository {
 	return &populationRepository{
 		mysql: mysql,
 	}
 }
 
-func GetTotalNumPopulation(mysql *sql.DB) {
-	q := `
-	SELECT COUNT(CitizenID)
-	FROM Population
-	GROUP BY CitizenID`
-	fmt.Println(mysql.Query(q))
+type ResponseTotalPop struct {
+	logrus.WithFields(logrus.Fields{
+		"Database": "MYSQL",
+		"Hostname": config.Hostname,
+	}).Error(err)
+}
 
+func (p *populationRepository) GetTotalNumPopulation() (ResponseTotalPop, error) {
+	q := "SELECT COUNT(DISTINCT CitizenID) as Total FROM Population"
+	popRow := ResponseTotalPop{}
+	err := p.mysql.Get(&popRow, q)
+
+	
+	if err != nil {
+		logrus.Fields()
+		logrus.Error(popRow)
+		return popRow, err
+	}
+
+	return popRow, nil
 }

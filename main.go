@@ -38,5 +38,5 @@ func main() {
 
 	server := gin.Default()
 	server.GET("/population/statistic/", populationHandler.GetPopulationStatistics)
-	server.Run(":8080")
+	server.Run(fmt.Sprint(":", appConfig.LISTENING_PORT))
 }
