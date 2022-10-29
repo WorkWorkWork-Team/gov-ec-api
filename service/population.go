@@ -1,22 +1,28 @@
 package service
 
-import "github.com/WorkWorkWork-Team/gov-ec-api/repository"
+import (
+	"github.com/WorkWorkWork-Team/gov-ec-api/model"
+	"github.com/WorkWorkWork-Team/gov-ec-api/repository"
+)
 
 type populationService struct {
-	populationRepository repository.PopulationRepository
+	repository repository.PopulationRepository
 }
 
 type PopulationService interface {
-	GetTotalPopulation() bool
+	GetPopulationStatistics() ([]model.PopulationResponseItem, error)
 }
 
 func NewPopulationService(populationRepository repository.PopulationRepository) PopulationService {
 	return &populationService{
-		populationRepository: populationRepository,
+		repository: populationRepository,
 	}
 }
 
-func (p *populationService) GetTotalPopulation() bool {
-	p.populationRepository.GetTotalNumPopulation()
-	return false
+func (p *populationService) GetPopulationStatistics() ([]model.PopulationResponseItem, error) {
+	data, err := p.repository.QueryPopulationStat()
+	if err != nil {
+		return data, err
+	}
+	return data, nil
 }

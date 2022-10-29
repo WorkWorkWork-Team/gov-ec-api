@@ -1,10 +1,9 @@
 package handler
 
 import (
-	"net/http"
-
 	"github.com/WorkWorkWork-Team/gov-ec-api/service"
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 type populationHandler struct {
@@ -18,8 +17,13 @@ func NewPopulationHandler(populationService service.PopulationService) populatio
 }
 
 func (p populationHandler) GetPopulationStatistics(g *gin.Context) {
-	popData := p.service.GetTotalPopulation()
-	g.JSON(http.StatusOK, gin.H{
-		"test": popData,
-	})
+	popData, err := p.service.GetPopulationStatistics()
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"Module":   "handler",
+			"Function": "GetPopulationStatistics",
+		})
+		logrus.Error(err)
+	}
+	g.JSON(200, popData)
 }
