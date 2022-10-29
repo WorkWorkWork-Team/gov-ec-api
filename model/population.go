@@ -3,11 +3,11 @@ package model
 import "time"
 
 type PopulationResponseItem struct {
-	LocationID            string `db:"DistrictID"`
-	Location              string `db:"Name"`
-	PeopleWithRightToVote int64  `db:"HaveRight"`
-	PeopleCommitTheVote   int64  `db:"Commits"`
-	TotalPeople           int64  `db:"Total"`
+	LocationID            string
+	Location              string
+	PeopleWithRightToVote int64
+	PeopleCommitTheVote   int64
+	TotalPeople           int64
 }
 
 type PopulationDatabaseRow struct {

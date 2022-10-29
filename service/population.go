@@ -21,14 +21,34 @@ func NewPopulationService(populationRepository repository.PopulationRepository) 
 }
 
 func (p *populationService) GetPopulationStatistics() ([]model.PopulationResponseItem, error) {
-	data, err := p.repository.QueryPopulationStat()
+	out := []model.PopulationResponseItem{}
+	districts, err := p.repository.QueryAllDistrict()
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"Module":  "Service",
-			"Funtion": "GetPopulationStatistics",
-		})
 		logrus.Error(err)
-		return data, err
 	}
-	return data, nil
+	for _, s := range districts {
+		districtId := s.LocationID
+		districtName := s.Location
+		total, err := p.repository.QueryTotalPopulation(districtId)
+		if err != nil {
+			logrus.Error(err)
+		}
+		haveRight, err := p.repository.QueryPeopleRightToVote(districtId)
+		if err != nil {
+			logrus.Error(err)
+		}
+		commit, err := p.repository.QueryPeopleCommitedTheVote(districtId)
+		if err != nil {
+			logrus.Error(err)
+		}
+		row := model.PopulationResponseItem{
+			LocationID:            districtId,
+			Location:              districtName,
+			TotalPeople:           total.Total,
+			PeopleWithRightToVote: haveRight.PeopleWithRightToVote,
+			PeopleCommitTheVote:   commit.PeopleCommitTheVote,
+		}
+		out = append(out, row)
+	}
+	return out, nil
 }

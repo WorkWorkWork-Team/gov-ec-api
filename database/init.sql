@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS Population
     LazerID VARCHAR(255),
     Name VARCHAR(255),
     Lastname VARCHAR(255),
-    Birthday DATETIME,
+    Birthday DATE,
     Nationality VARCHAR(255),
     DistrictID INTEGER,
     CONSTRAINT fk_district FOREIGN KEY (DistrictID) REFERENCES District(DistrictID),
