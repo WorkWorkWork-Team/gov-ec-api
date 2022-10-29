@@ -112,6 +112,7 @@ func (p *populationRepository) QueryPeopleRightToVote(districtId string) (Result
 			WHERE p.Birthday < DATE_ADD(CURRENT_DATE(), INTERVAL -18 YEAR) 
 			AND p.CitizenID NOT IN (SELECT CitizenID FROM ApplyVote)
 			AND p.DistrictId=?
+			AND p.Nationality="Thai"
 		) AS c
 	`
 	err := p.mysql.Get(&res, q, districtId)
