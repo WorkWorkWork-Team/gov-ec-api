@@ -13,7 +13,7 @@ func ValidateAPIKey(apiKey string) gin.HandlerFunc {
 			errMessage := "APIKEY not found"
 			logrus.Warn(errMessage, ", APIKEY: ", c.GetHeader("Authorization"))
 			c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Authentication failed"})
-			c.Abort()
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Authentication failed"})
 			return
 		}
 	}

@@ -44,9 +44,9 @@ func (p *populationService) GetPopulationStatistics() ([]model.PopulationRespons
 		row := model.PopulationResponseItem{
 			LocationID:            districtId,
 			Location:              districtName,
-			TotalPeople:           total.Total,
-			PeopleWithRightToVote: haveRight.PeopleWithRightToVote,
-			PeopleCommitTheVote:   commit.PeopleCommitTheVote,
+			TotalPeople:           total,
+			PeopleWithRightToVote: haveRight,
+			PeopleCommitTheVote:   commit,
 		}
 		out = append(out, row)
 	}

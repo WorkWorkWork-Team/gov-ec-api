@@ -5,11 +5,11 @@ import (
 	"os"
 
 	"github.com/WorkWorkWork-Team/common-go/databasemysql"
+	"github.com/WorkWorkWork-Team/common-go/httpserver"
 	"github.com/WorkWorkWork-Team/gov-ec-api/config"
 	"github.com/WorkWorkWork-Team/gov-ec-api/handler"
 	"github.com/WorkWorkWork-Team/gov-ec-api/repository"
 	"github.com/WorkWorkWork-Team/gov-ec-api/service"
-	"github.com/gin-gonic/gin"
 )
 
 var appConfig config.Config
@@ -36,7 +36,7 @@ func main() {
 
 	populationHandler := handler.NewPopulationHandler(populationService)
 
-	server := gin.Default()
+	server := httpserver.NewHttpServer()
 	server.Use(handler.ValidateAPIKey(appConfig.API_KEY))
 	{
 		server.GET("/population/statistic/", populationHandler.GetPopulationStatistics)

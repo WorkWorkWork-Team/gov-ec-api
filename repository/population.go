@@ -13,9 +13,9 @@ type populationRepository struct {
 
 type PopulationRepository interface {
 	QueryAllDistrict() ([]ResultQueryDistrictIdAndName, error)
-	QueryTotalPopulation(districtId string) (ResultQueryTotal, error)
-	QueryPeopleCommitedTheVote(districtId string) (ResultQueryPeopleCommitTheVote, error)
-	QueryPeopleRightToVote(districtId string) (ResultQueryPeopleWithRightToVote, error)
+	QueryTotalPopulation(districtId string) (int64, error)
+	QueryPeopleCommitedTheVote(districtId string) (int64, error)
+	QueryPeopleRightToVote(districtId string) (int64, error)
 }
 
 func NewPopulationRepository(mysql *sqlx.DB) PopulationRepository {
@@ -27,16 +27,6 @@ func NewPopulationRepository(mysql *sqlx.DB) PopulationRepository {
 type ResultQueryDistrictIdAndName struct {
 	LocationID string `db:"DistrictID"`
 	Location   string `db:"Name"`
-}
-
-type ResultQueryTotal struct {
-	Total int64 `db:"Total"`
-}
-type ResultQueryPeopleWithRightToVote struct {
-	PeopleWithRightToVote int64 `db:"HaveRight"`
-}
-type ResultQueryPeopleCommitTheVote struct {
-	PeopleCommitTheVote int64 `db:"Commits"`
 }
 
 func (p *populationRepository) queryLog(message string, functionName string) {
@@ -65,8 +55,8 @@ func (p *populationRepository) QueryAllDistrict() ([]ResultQueryDistrictIdAndNam
 	p.queryLog("Select all district", "QueryAllDistrict")
 	return res, nil
 }
-func (p *populationRepository) QueryTotalPopulation(districtId string) (ResultQueryTotal, error) {
-	res := ResultQueryTotal{}
+func (p *populationRepository) QueryTotalPopulation(districtId string) (int64, error) {
+	var res int64
 	q := `
 	SELECT COUNT(*) as Total
 	FROM Population as p
@@ -81,8 +71,8 @@ func (p *populationRepository) QueryTotalPopulation(districtId string) (ResultQu
 
 }
 
-func (p *populationRepository) QueryPeopleCommitedTheVote(districtId string) (ResultQueryPeopleCommitTheVote, error) {
-	res := ResultQueryPeopleCommitTheVote{}
+func (p *populationRepository) QueryPeopleCommitedTheVote(districtId string) (int64, error) {
+	var res int64
 	q := `
 	SELECT COUNT(*) as Commits
 	FROM 
@@ -103,8 +93,8 @@ func (p *populationRepository) QueryPeopleCommitedTheVote(districtId string) (Re
 	return res, nil
 }
 
-func (p *populationRepository) QueryPeopleRightToVote(districtId string) (ResultQueryPeopleWithRightToVote, error) {
-	res := ResultQueryPeopleWithRightToVote{}
+func (p *populationRepository) QueryPeopleRightToVote(districtId string) (int64, error) {
+	var res int64
 	q := `
 	SELECT COUNT(*) as HaveRight
 	FROM (
