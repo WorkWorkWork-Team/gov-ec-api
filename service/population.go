@@ -32,14 +32,17 @@ func (p *populationService) GetPopulationStatistics() ([]model.PopulationRespons
 		total, err := p.repository.QueryTotalPopulation(districtId)
 		if err != nil {
 			logrus.Error(err)
+			continue
 		}
 		haveRight, err := p.repository.QueryPeopleRightToVote(districtId)
 		if err != nil {
 			logrus.Error(err)
+			continue
 		}
 		commit, err := p.repository.QueryPeopleCommitedTheVote(districtId)
 		if err != nil {
 			logrus.Error(err)
+			continue
 		}
 		row := model.PopulationResponseItem{
 			LocationID:            districtId,
