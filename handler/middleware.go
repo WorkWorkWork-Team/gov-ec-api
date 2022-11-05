@@ -2,18 +2,22 @@ package handler
 
 import (
 	"net/http"
+	"regexp"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
 
+var authBearerRegExp *regexp.Regexp = regexp.MustCompile("[B|b]earer (.*)")
+
 func ValidateAPIKey(apiKey string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if c.GetHeader("Authorization") != apiKey {
-			errMessage := "APIKEY not found"
-			logrus.Warn(errMessage, ", APIKEY: ", c.GetHeader("Authorization"))
-			c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Authentication failed"})
-			c.Abort()
+		result := authBearerRegExp.FindStringSubmatch(c.GetHeader("Authorization"))
+		logrus.Debug("RegExp Debug: ", result)
+		if len(result) != 2 || result[1] != apiKey {
+			errMessage := "APIKEY is not found or is incorrected"
+			logrus.Warn(errMessage, ", Authorization Header: ", c.GetHeader("Authorization"))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Authentication failed"})
 			return
 		}
 	}

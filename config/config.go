@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 
+	"github.com/WorkWorkWork-Team/common-go/logger"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/sirupsen/logrus"
@@ -17,7 +18,7 @@ type Config struct {
 	MYSQL_USERNAME string `envconfig:"MYSQL_USERNAME"`
 	MYSQL_PASSWORD string `envconfig:"MYSQL_PASSWORD"`
 	MYSQL_DATABASE string `envconfig:"MYSQL_DATABASE"`
-	API_KEY        string `envconfig:"API_KEY`
+	API_KEY        string `envconfig:"API_KEY"`
 }
 
 func Load() Config {
@@ -29,6 +30,10 @@ func Load() Config {
 		// Default value for ENV.
 		ENV = "dev"
 	}
+
+	logger.InitLogger(logger.Config{
+		Env: ENV,
+	})
 
 	err := godotenv.Load("./.env")
 	if err != nil {

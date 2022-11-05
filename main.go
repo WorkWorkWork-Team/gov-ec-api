@@ -5,11 +5,11 @@ import (
 	"os"
 
 	"github.com/WorkWorkWork-Team/common-go/databasemysql"
+	"github.com/WorkWorkWork-Team/common-go/httpserver"
 	"github.com/WorkWorkWork-Team/gov-ec-api/config"
 	"github.com/WorkWorkWork-Team/gov-ec-api/handler"
 	"github.com/WorkWorkWork-Team/gov-ec-api/repository"
 	"github.com/WorkWorkWork-Team/gov-ec-api/service"
-	"github.com/gin-gonic/gin"
 )
 
 var appConfig config.Config
@@ -31,15 +31,21 @@ func main() {
 	}
 
 	// New Repository
+	populationRepository := repository.NewPopulationRepository(mysql)
 	submitMpRepository := repository.NewSubmitMpRepository(mysql)
 
+	// New Service
+	populationService := service.NewPopulationService(populationRepository)
 	submitmpService := service.NewSubmitmpService(submitMpRepository)
 
+	// New Handler
+	populationHandler := handler.NewPopulationHandler(populationService)
 	submitmpHandler := handler.NewSubmitMpHandler(submitmpService)
 
-	server := gin.Default()
+	server := httpserver.NewHttpServer()
 	server.Use(handler.ValidateAPIKey(appConfig.API_KEY))
 	{
+		server.GET("/population/statistic/", populationHandler.GetPopulationStatistics)
 		server.POST("/mp/submit/", submitmpHandler.SubmitMp)
 	}
 	server.Run(fmt.Sprint(":", appConfig.LISTENING_PORT))
