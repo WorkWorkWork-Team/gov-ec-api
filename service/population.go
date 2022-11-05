@@ -12,6 +12,7 @@ type populationService struct {
 
 type PopulationService interface {
 	GetPopulationStatistics() ([]model.PopulationResponseItem, error)
+	GetAllCandidateInfo() ([]model.PopulationDatabaseRow, error)
 }
 
 func NewPopulationService(populationRepository repository.PopulationRepository) PopulationService {
@@ -52,6 +53,26 @@ func (p *populationService) GetPopulationStatistics() ([]model.PopulationRespons
 			PeopleCommitTheVote:   commit,
 		}
 		out = append(out, row)
+	}
+	return out, nil
+}
+
+func (p *populationService) GetAllCandidateInfo() ([]model.PopulationDatabaseRow, error) {
+	out := []model.PopulationDatabaseRow{}
+	districts, err := p.repository.QueryAllDistrict()
+	if err != nil {
+		logrus.Error(err)
+	}
+	for _, s := range districts {
+		districtId := s.DistrictID
+		res, err := p.repository.QueryCandidate(districtId)
+		if err != nil {
+			logrus.Error(err)
+			continue
+		}
+		for _, c := range res {
+			out = append(out, c)
+		}
 	}
 	return out, nil
 }
