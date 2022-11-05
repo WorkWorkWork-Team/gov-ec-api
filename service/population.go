@@ -65,7 +65,7 @@ func (p *populationService) GetAllCandidateInfo() ([]model.PopulationDatabaseRow
 	}
 	for _, s := range districts {
 		districtId := s.DistrictID
-		res, err := p.repository.QueryCandidate(districtId)
+		res, err := p.repository.QueryCandidateByDistrict(districtId)
 		if err != nil {
 			logrus.Error(err)
 			continue
