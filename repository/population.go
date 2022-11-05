@@ -17,6 +17,7 @@ type PopulationRepository interface {
 	QueryTotalPopulation(districtId int) (int64, error)
 	QueryPeopleCommitedTheVote(districtId int) (int64, error)
 	QueryPeopleRightToVote(districtId int) (int64, error)
+	QueryCandidate(districtId int) ([]model.PopulationDatabaseRow, error)
 }
 
 func NewPopulationRepository(mysql *sqlx.DB) PopulationRepository {
@@ -108,5 +109,23 @@ func (p *populationRepository) QueryPeopleRightToVote(districtId int) (int64, er
 	}
 	p.queryLog(fmt.Sprintf("Get total people have right to vote districtId: %d", districtId), "QueryPeopleRightToVote")
 	return res, nil
+}
 
+func (p *populationRepository) QueryCandidate(districtId int) ([]model.PopulationDatabaseRow, error) {
+	res := []model.PopulationDatabaseRow{}
+	q := `
+	SELECT *
+	FROM (
+			Population as p JOIN Candidate as c
+			ON p.CitizenID = c.CitizenID
+		) AS c
+	WHERE c.DistrictID=?
+	`
+	err := p.mysql.Get(&res, q, districtId)
+	if err != nil {
+		p.errorMessage(err, "QueryCandidate")
+		return res, err
+	}
+	p.queryLog(fmt.Sprintf("Get all candidates from districtId: %d", districtId), "QueryCandidate")
+	return res, nil
 }
