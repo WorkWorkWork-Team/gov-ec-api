@@ -16,14 +16,25 @@ func NewPopulationHandler(populationService service.PopulationService) populatio
 	}
 }
 
+func (p *populationHandler) errorMessage(err error, functionName string) {
+	logrus.WithFields(logrus.Fields{
+		"Module":  "Handler",
+		"Funtion": functionName,
+	}).Error(err)
+}
+
 func (p populationHandler) GetPopulationStatistics(g *gin.Context) {
 	popData, err := p.service.GetPopulationStatistics()
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"Module":   "handler",
-			"Function": "GetPopulationStatistics",
-		})
-		logrus.Error(err)
+		p.errorMessage(err, "GetPopulationStatistics")
+	}
+	g.JSON(200, popData)
+}
+
+func (p populationHandler) GetAllCandidateInfo(g *gin.Context) {
+	popData, err := p.service.GetAllCandidateInfo()
+	if err != nil {
+		p.errorMessage(err, "GetAllCandidateInfo")
 	}
 	g.JSON(200, popData)
 }
