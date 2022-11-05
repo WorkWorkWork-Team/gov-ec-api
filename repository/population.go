@@ -3,6 +3,7 @@ package repository
 import (
 	"fmt"
 
+	"github.com/WorkWorkWork-Team/gov-ec-api/model"
 	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
 )
@@ -12,7 +13,7 @@ type populationRepository struct {
 }
 
 type PopulationRepository interface {
-	QueryAllDistrict() ([]ResultQueryDistrictIdAndName, error)
+	QueryAllDistrict() ([]model.District, error)
 	QueryTotalPopulation(districtId string) (int64, error)
 	QueryPeopleCommitedTheVote(districtId string) (int64, error)
 	QueryPeopleRightToVote(districtId string) (int64, error)
@@ -22,11 +23,6 @@ func NewPopulationRepository(mysql *sqlx.DB) PopulationRepository {
 	return &populationRepository{
 		mysql: mysql,
 	}
-}
-
-type ResultQueryDistrictIdAndName struct {
-	LocationID string `db:"DistrictID"`
-	Location   string `db:"Name"`
 }
 
 func (p *populationRepository) queryLog(message string, functionName string) {
@@ -43,8 +39,8 @@ func (p *populationRepository) errorMessage(err error, functionName string) {
 	}).Error(err)
 }
 
-func (p *populationRepository) QueryAllDistrict() ([]ResultQueryDistrictIdAndName, error) {
-	res := []ResultQueryDistrictIdAndName{}
+func (p *populationRepository) QueryAllDistrict() ([]model.District, error) {
+	res := []model.District{}
 	q := `SELECT Name, DistrictID
 	FROM District`
 	err := p.mysql.Select(&res, q)

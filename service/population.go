@@ -27,8 +27,8 @@ func (p *populationService) GetPopulationStatistics() ([]model.PopulationRespons
 		logrus.Error(err)
 	}
 	for _, s := range districts {
-		districtId := s.LocationID
-		districtName := s.Location
+		districtId := s.DistrictID
+		districtName := s.Name
 		total, err := p.repository.QueryTotalPopulation(districtId)
 		if err != nil {
 			logrus.Error(err)
