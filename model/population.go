@@ -3,7 +3,7 @@ package model
 import "time"
 
 type PopulationResponseItem struct {
-	LocationID            string
+	LocationID            int
 	Location              string
 	PeopleWithRightToVote int64
 	PeopleCommitTheVote   int64

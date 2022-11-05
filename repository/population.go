@@ -14,9 +14,9 @@ type populationRepository struct {
 
 type PopulationRepository interface {
 	QueryAllDistrict() ([]model.District, error)
-	QueryTotalPopulation(districtId string) (int64, error)
-	QueryPeopleCommitedTheVote(districtId string) (int64, error)
-	QueryPeopleRightToVote(districtId string) (int64, error)
+	QueryTotalPopulation(districtId int) (int64, error)
+	QueryPeopleCommitedTheVote(districtId int) (int64, error)
+	QueryPeopleRightToVote(districtId int) (int64, error)
 }
 
 func NewPopulationRepository(mysql *sqlx.DB) PopulationRepository {
@@ -51,7 +51,7 @@ func (p *populationRepository) QueryAllDistrict() ([]model.District, error) {
 	p.queryLog("Select all district", "QueryAllDistrict")
 	return res, nil
 }
-func (p *populationRepository) QueryTotalPopulation(districtId string) (int64, error) {
+func (p *populationRepository) QueryTotalPopulation(districtId int) (int64, error) {
 	var res int64
 	q := `
 	SELECT COUNT(*) as Total
@@ -62,12 +62,12 @@ func (p *populationRepository) QueryTotalPopulation(districtId string) (int64, e
 		p.errorMessage(err, "QueryTotalPopulation")
 		return res, err
 	}
-	p.queryLog(fmt.Sprintf("Get total population districtId: %s", districtId), "QueryTotalPopulation")
+	p.queryLog(fmt.Sprintf("Get total population districtId: %d", districtId), "QueryTotalPopulation")
 	return res, nil
 
 }
 
-func (p *populationRepository) QueryPeopleCommitedTheVote(districtId string) (int64, error) {
+func (p *populationRepository) QueryPeopleCommitedTheVote(districtId int) (int64, error) {
 	var res int64
 	q := `
 	SELECT COUNT(*) as Commits
@@ -85,11 +85,11 @@ func (p *populationRepository) QueryPeopleCommitedTheVote(districtId string) (in
 		p.errorMessage(err, "QueryPeopleCommitedTheVote")
 		return res, err
 	}
-	p.queryLog(fmt.Sprintf("Get total people commited the vote districtId: %s", districtId), "QueryPeopleCommitedTheVote")
+	p.queryLog(fmt.Sprintf("Get total people commited the vote districtId: %d", districtId), "QueryPeopleCommitedTheVote")
 	return res, nil
 }
 
-func (p *populationRepository) QueryPeopleRightToVote(districtId string) (int64, error) {
+func (p *populationRepository) QueryPeopleRightToVote(districtId int) (int64, error) {
 	var res int64
 	q := `
 	SELECT COUNT(*) as HaveRight
@@ -106,7 +106,7 @@ func (p *populationRepository) QueryPeopleRightToVote(districtId string) (int64,
 		p.errorMessage(err, "QueryPeopleRightToVote")
 		return res, err
 	}
-	p.queryLog(fmt.Sprintf("Get total people have right to vote districtId: %s", districtId), "QueryPeopleRightToVote")
+	p.queryLog(fmt.Sprintf("Get total people have right to vote districtId: %d", districtId), "QueryPeopleRightToVote")
 	return res, nil
 
 }

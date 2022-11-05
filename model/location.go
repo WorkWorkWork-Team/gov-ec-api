@@ -1,7 +1,7 @@
 package model
 
 type District struct {
-	DistrictID string `db:"DistrictID"`
-	ProvinceID string `db:"ProvinceID"`
+	DistrictID int    `db:"DistrictID"`
+	ProvinceID int    `db:"ProvinceID"`
 	Name       string `db:"Name"`
 }
