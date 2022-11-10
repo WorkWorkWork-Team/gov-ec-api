@@ -40,7 +40,7 @@ func main() {
 	server.Use(handler.ValidateAPIKey(appConfig.API_KEY))
 	{
 		server.GET("/population/statistic/", populationHandler.GetPopulationStatistics)
-		server.GET("/population/candidate/", populationHandler.GetAllCandidateInfo)
+		server.GET("/candidate/", populationHandler.GetAllCandidateInfo)
 	}
 	server.Run(fmt.Sprint(":", appConfig.LISTENING_PORT))
 
