@@ -1,8 +1,6 @@
 package service
 
 import (
-	"database/sql"
-
 	"github.com/WorkWorkWork-Team/gov-ec-api/model"
 	"github.com/WorkWorkWork-Team/gov-ec-api/repository"
 	"github.com/sirupsen/logrus"
@@ -75,28 +73,12 @@ func (p *populationService) GetPopulationStatistics() ([]model.PopulationRespons
 	return out, nil
 }
 
-func (p *populationService) GetAllCandidateInfo() ([]model.PopulationDatabaseRow, error) {
-	out := []model.PopulationDatabaseRow{}
-	districts, err := p.repository.QueryAllDistrict()
+func (p *populationService) GetAllCandidateInfo() (candidates []model.PopulationDatabaseRow, err error) {
+	candidates, err = p.GetAllCandidateInfo()
 	if err != nil {
-		p.errorMessage(err, "QueryAllDistrict")
-		return []model.PopulationDatabaseRow{}, err
-	}
-	for _, s := range districts {
-		districtId := s.DistrictID
-		res, err := p.repository.QueryCandidateByDistrict(districtId)
-		if err != nil {
-			if err == sql.ErrNoRows {
-				p.errorMessage(err, "QueryCandidateByDistrict")
-			} else {
-				p.errorMessage(err, "QueryCandidateByDistrict")
-				return []model.PopulationDatabaseRow{}, err
-			}
-		}
-		for _, c := range res {
-			out = append(out, c)
-		}
+		p.errorMessage(err, "GetAllCandidateInfo")
+		return
 	}
 	p.queryLog("return all candidate informatiom", "GetPopulationStatistics")
-	return out, nil
+	return candidates, nil
 }
