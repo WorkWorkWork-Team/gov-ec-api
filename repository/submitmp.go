@@ -23,6 +23,6 @@ func (a *submitMpRepository) SubmitMpToDB(citizenID string) error {
 	if err != nil {
 		return err
 	}
-	defer rows.Close()
+	rows.Close()
 	return nil
 }
