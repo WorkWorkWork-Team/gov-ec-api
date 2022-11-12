@@ -21,29 +21,37 @@ func NewPopulationService(populationRepository repository.PopulationRepository) 
 	}
 }
 
+func (p *populationService) errorMessage(err error, functionName string) {
+	logrus.WithFields(logrus.Fields{
+		"Module":  "Service",
+		"Funtion": functionName,
+	}).Error(err)
+}
+
 func (p *populationService) GetPopulationStatistics() ([]model.PopulationResponseItem, error) {
 	out := []model.PopulationResponseItem{}
 	districts, err := p.repository.QueryAllDistrict()
 	if err != nil {
-		logrus.Error(err)
+		p.errorMessage(err, "QueryAllDistrict")
+		return []model.PopulationResponseItem{}, err
 	}
 	for _, s := range districts {
 		districtId := s.DistrictID
 		districtName := s.Name
 		total, err := p.repository.QueryTotalPopulation(districtId)
 		if err != nil {
-			logrus.Error(err)
-			continue
+			p.errorMessage(err, "QueryTotalPopulation")
+			return []model.PopulationResponseItem{}, err
 		}
 		haveRight, err := p.repository.QueryPeopleRightToVote(districtId)
 		if err != nil {
-			logrus.Error(err)
-			continue
+			p.errorMessage(err, "QueryPeopleRightToVote")
+			return []model.PopulationResponseItem{}, err
 		}
 		commit, err := p.repository.QueryPeopleCommitedTheVote(districtId)
 		if err != nil {
-			logrus.Error(err)
-			continue
+			p.errorMessage(err, "QueryPeopleCommitedTheVote")
+			return []model.PopulationResponseItem{}, err
 		}
 		row := model.PopulationResponseItem{
 			LocationID:            districtId,
@@ -61,14 +69,15 @@ func (p *populationService) GetAllCandidateInfo() ([]model.PopulationDatabaseRow
 	out := []model.PopulationDatabaseRow{}
 	districts, err := p.repository.QueryAllDistrict()
 	if err != nil {
-		logrus.Error(err)
+		p.errorMessage(err, "QueryAllDistrict")
+		return []model.PopulationDatabaseRow{}, err
 	}
 	for _, s := range districts {
 		districtId := s.DistrictID
 		res, err := p.repository.QueryCandidateByDistrict(districtId)
 		if err != nil {
-			logrus.Error(err)
-			continue
+			p.errorMessage(err, "QueryCandidateByDistrict")
+			return []model.PopulationDatabaseRow{}, err
 		}
 		for _, c := range res {
 			out = append(out, c)
