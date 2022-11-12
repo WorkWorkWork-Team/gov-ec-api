@@ -122,9 +122,26 @@ func (p *populationRepository) QueryCandidateByDistrict(districtId int) ([]model
 	`
 	err := p.mysql.Select(&res, q, districtId)
 	if err != nil {
-		p.errorMessage(err, "QueryCandidate")
+		p.errorMessage(err, "QueryCandidateByDistrict")
 		return res, err
 	}
-	p.queryLog(fmt.Sprintf("Get all candidates from districtId: %d", districtId), "QueryCandidate")
+	p.queryLog(fmt.Sprintf("Get all candidates from districtId: %d", districtId), "QueryCandidateByDistrict")
+	return res, nil
+}
+
+func (p *populationRepository) QueryAllCandidate(districtId int) ([]model.PopulationDatabaseRow, error) {
+	res := []model.PopulationDatabaseRow{}
+	q := `
+	SELECT p.CitizenID, LazerID, Name, Lastname, Birthday, Nationality, DistrictID
+	FROM Population AS p
+	JOIN Candidate AS c
+	ON p.CitizenID = c.CitizenID
+	`
+	err := p.mysql.Select(&res, q)
+	if err != nil {
+		p.errorMessage(err, "QueryAllCandidate")
+		return res, err
+	}
+	p.queryLog("Get all candidates", "QueryAllCandidate")
 	return res, nil
 }
