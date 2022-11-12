@@ -1,6 +1,8 @@
 package service
 
 import (
+	"database/sql"
+
 	"github.com/WorkWorkWork-Team/gov-ec-api/model"
 	"github.com/WorkWorkWork-Team/gov-ec-api/repository"
 	"github.com/sirupsen/logrus"
@@ -26,6 +28,13 @@ func (p *populationService) errorMessage(err error, functionName string) {
 		"Module":  "Service",
 		"Funtion": functionName,
 	}).Error(err)
+}
+
+func (p *populationService) queryLog(message string, functionName string) {
+	logrus.WithFields(logrus.Fields{
+		"Module":  "Service",
+		"Funtion": functionName,
+	}).Info(message)
 }
 
 func (p *populationService) GetPopulationStatistics() ([]model.PopulationResponseItem, error) {
@@ -62,6 +71,7 @@ func (p *populationService) GetPopulationStatistics() ([]model.PopulationRespons
 		}
 		out = append(out, row)
 	}
+	p.queryLog("return population statistic", "GetPopulationStatistics")
 	return out, nil
 }
 
@@ -76,12 +86,17 @@ func (p *populationService) GetAllCandidateInfo() ([]model.PopulationDatabaseRow
 		districtId := s.DistrictID
 		res, err := p.repository.QueryCandidateByDistrict(districtId)
 		if err != nil {
-			p.errorMessage(err, "QueryCandidateByDistrict")
-			return []model.PopulationDatabaseRow{}, err
+			if err == sql.ErrNoRows {
+				p.errorMessage(err, "QueryCandidateByDistrict")
+			} else {
+				p.errorMessage(err, "QueryCandidateByDistrict")
+				return []model.PopulationDatabaseRow{}, err
+			}
 		}
 		for _, c := range res {
 			out = append(out, c)
 		}
 	}
+	p.queryLog("return all candidate informatiom", "GetPopulationStatistics")
 	return out, nil
 }
