@@ -28,5 +28,4 @@ func (a *submitmpHandler) SubmitMp(g *gin.Context) {
 		return
 	}
 	g.Status(http.StatusOK)
-	return
 }
