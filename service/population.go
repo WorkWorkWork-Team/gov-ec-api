@@ -31,7 +31,7 @@ func (p *populationService) generateLogger(functionName string) *logrus.Entry {
 func (p *populationService) GetPopulationStatistics() (populationStatistic []model.PopulationResponseItem, err error) {
 	districts, err := p.repository.QueryAllDistrict()
 	if err != nil {
-		p.generateLogger("QueryAllDistrict")
+		p.generateLogger("QueryAllDistrict").Error(err)
 		return []model.PopulationResponseItem{}, err
 	}
 	for _, s := range districts {
@@ -39,17 +39,17 @@ func (p *populationService) GetPopulationStatistics() (populationStatistic []mod
 		districtName := s.Name
 		total, err := p.repository.QueryTotalPopulation(districtId)
 		if err != nil {
-			p.generateLogger("QueryTotalPopulation")
+			p.generateLogger("QueryTotalPopulation").Error(err)
 			return []model.PopulationResponseItem{}, err
 		}
 		haveRight, err := p.repository.QueryPeopleRightToVote(districtId)
 		if err != nil {
-			p.generateLogger("QueryPeopleRightToVote")
+			p.generateLogger("QueryTotalPopulation").Error(err)
 			return []model.PopulationResponseItem{}, err
 		}
 		commit, err := p.repository.QueryPeopleCommitedTheVote(districtId)
 		if err != nil {
-			p.generateLogger("QueryPeopleCommitedTheVote")
+			p.generateLogger("QueryPeopleCommitedTheVote").Error(err)
 			return []model.PopulationResponseItem{}, err
 		}
 		row := model.PopulationResponseItem{
@@ -61,16 +61,16 @@ func (p *populationService) GetPopulationStatistics() (populationStatistic []mod
 		}
 		populationStatistic = append(populationStatistic, row)
 	}
-	p.generateLogger("return population statistic")
+	p.generateLogger("GetPopulationStatistics").Info("return population statistics")
 	return populationStatistic, nil
 }
 
 func (p *populationService) GetAllCandidateInfo() (candidates []model.PopulationDatabaseRow, err error) {
-	candidates, err = p.GetAllCandidateInfo()
+	candidates, err = p.repository.QueryAllCandidate()
 	if err != nil {
-		p.generateLogger("GetAllCandidateInfo")
+		p.generateLogger("GetAllCandidateInfo").Error(err)
 		return
 	}
-	p.generateLogger("GetPopulationStatistics")
+	p.generateLogger("GetAllCandidateInfo").Info("return all candidate info")
 	return candidates, nil
 }
