@@ -20,11 +20,11 @@ func NewPopulationHandler(populationService service.PopulationService) populatio
 	}
 }
 
-func (p *populationHandler) errorMessage(err error, functionName string) {
-	logrus.WithFields(logrus.Fields{
+func (p *populationHandler) generateLogger(err error, functionName string) *logrus.Entry {
+	return logrus.WithFields(logrus.Fields{
 		"Module":  "Handler",
 		"Funtion": functionName,
-	}).Error(err)
+	})
 }
 
 func (p populationHandler) GetPopulationStatistics(g *gin.Context) {
