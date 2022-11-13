@@ -1,6 +1,10 @@
 package handler
 
 import (
+	"database/sql"
+	"errors"
+	"net/http"
+
 	"github.com/WorkWorkWork-Team/gov-ec-api/service"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -25,16 +29,32 @@ func (p *populationHandler) errorMessage(err error, functionName string) {
 
 func (p populationHandler) GetPopulationStatistics(g *gin.Context) {
 	popData, err := p.service.GetPopulationStatistics()
-	if err != nil {
-		p.errorMessage(err, "GetPopulationStatistics")
+	if err == nil {
+		g.JSON(http.StatusOK, popData)
+		return
+	} else if errors.Is(err, sql.ErrNoRows) {
+		g.JSON(http.StatusNotFound, gin.H{
+			"message": "Not matching data",
+		})
+		return
 	}
-	g.JSON(200, popData)
+	g.JSON(http.StatusInternalServerError, gin.H{
+		"message": "Something went wrong.",
+	})
 }
 
 func (p populationHandler) GetAllCandidateInfo(g *gin.Context) {
 	popData, err := p.service.GetAllCandidateInfo()
-	if err != nil {
-		p.errorMessage(err, "GetAllCandidateInfo")
+	if err == nil {
+		g.JSON(http.StatusOK, popData)
+		return
+	} else if errors.Is(err, sql.ErrNoRows) {
+		g.JSON(http.StatusNotFound, gin.H{
+			"message": "Not matching data",
+		})
+		return
 	}
-	g.JSON(200, popData)
+	g.JSON(http.StatusInternalServerError, gin.H{
+		"message": "Something went wrong.",
+	})
 }
