@@ -35,8 +35,7 @@ func (p *populationService) queryLog(message string, functionName string) {
 	}).Info(message)
 }
 
-func (p *populationService) GetPopulationStatistics() ([]model.PopulationResponseItem, error) {
-	out := []model.PopulationResponseItem{}
+func (p *populationService) GetPopulationStatistics() (populationStatistic []model.PopulationResponseItem, err error) {
 	districts, err := p.repository.QueryAllDistrict()
 	if err != nil {
 		p.errorMessage(err, "QueryAllDistrict")
@@ -67,10 +66,10 @@ func (p *populationService) GetPopulationStatistics() ([]model.PopulationRespons
 			PeopleWithRightToVote: haveRight,
 			PeopleCommitTheVote:   commit,
 		}
-		out = append(out, row)
+		populationStatistic = append(populationStatistic, row)
 	}
 	p.queryLog("return population statistic", "GetPopulationStatistics")
-	return out, nil
+	return populationStatistic, nil
 }
 
 func (p *populationService) GetAllCandidateInfo() (candidates []model.PopulationDatabaseRow, err error) {
