@@ -21,18 +21,11 @@ func NewPopulationService(populationRepository repository.PopulationRepository) 
 	}
 }
 
-func (p *populationService) errorMessage(err error, functionName string) {
-	logrus.WithFields(logrus.Fields{
+func (p *populationService) generateLogger(functionName string) *logrus.Entry {
+	return logrus.WithFields(logrus.Fields{
 		"Module":  "Service",
 		"Funtion": functionName,
-	}).Error(err)
-}
-
-func (p *populationService) queryLog(message string, functionName string) {
-	logrus.WithFields(logrus.Fields{
-		"Module":  "Service",
-		"Funtion": functionName,
-	}).Info(message)
+	})
 }
 
 func (p *populationService) GetPopulationStatistics() (populationStatistic []model.PopulationResponseItem, err error) {
