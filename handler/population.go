@@ -20,7 +20,7 @@ func NewPopulationHandler(populationService service.PopulationService) populatio
 	}
 }
 
-func (p *populationHandler) generateLogger(err error, functionName string) *logrus.Entry {
+func (p *populationHandler) generateLogger(functionName string) *logrus.Entry {
 	return logrus.WithFields(logrus.Fields{
 		"Module":  "Handler",
 		"Funtion": functionName,
@@ -31,36 +31,36 @@ func (p populationHandler) GetPopulationStatistics(g *gin.Context) {
 	popData, err := p.service.GetPopulationStatistics()
 	if err == nil {
 		g.JSON(http.StatusOK, popData)
-		p.generateLogger(err, "GetPopulationStatistics")
+		p.generateLogger("GetPopulationStatistics").Info("return population statistics")
 		return
 	} else if errors.Is(err, sql.ErrNoRows) {
 		g.JSON(http.StatusNotFound, gin.H{
 			"message": "Not matching data",
 		})
-		p.generateLogger(err, "GetPopulationStatistics")
+		p.generateLogger("GetPopulationStatistics").Error(err)
 		return
 	}
 	g.JSON(http.StatusInternalServerError, gin.H{
 		"message": "Something went wrong.",
 	})
-	p.generateLogger(err, "GetPopulationStatistics")
+	p.generateLogger("GetPopulationStatistics").Error(err)
 }
 
 func (p populationHandler) GetAllCandidateInfo(g *gin.Context) {
 	popData, err := p.service.GetAllCandidateInfo()
 	if err == nil {
 		g.JSON(http.StatusOK, popData)
-		p.generateLogger(err, "GetAllCandidateInfo")
+		p.generateLogger("GetAllCandidateInfo").Info("return all candidate info")
 		return
 	} else if errors.Is(err, sql.ErrNoRows) {
 		g.JSON(http.StatusNotFound, gin.H{
 			"message": "Not matching data",
 		})
-		p.generateLogger(err, "GetAllCandidateInfo")
+		p.generateLogger("GetAllCandidateInfo").Error(err)
 		return
 	}
 	g.JSON(http.StatusInternalServerError, gin.H{
 		"message": "Something went wrong.",
 	})
-	p.generateLogger(err, "GetAllCandidateInfo")
+	p.generateLogger("GetAllCandidateInfo").Error(err)
 }
