@@ -31,30 +31,36 @@ func (p populationHandler) GetPopulationStatistics(g *gin.Context) {
 	popData, err := p.service.GetPopulationStatistics()
 	if err == nil {
 		g.JSON(http.StatusOK, popData)
+		p.generateLogger(err, "GetPopulationStatistics")
 		return
 	} else if errors.Is(err, sql.ErrNoRows) {
 		g.JSON(http.StatusNotFound, gin.H{
 			"message": "Not matching data",
 		})
+		p.generateLogger(err, "GetPopulationStatistics")
 		return
 	}
 	g.JSON(http.StatusInternalServerError, gin.H{
 		"message": "Something went wrong.",
 	})
+	p.generateLogger(err, "GetPopulationStatistics")
 }
 
 func (p populationHandler) GetAllCandidateInfo(g *gin.Context) {
 	popData, err := p.service.GetAllCandidateInfo()
 	if err == nil {
 		g.JSON(http.StatusOK, popData)
+		p.generateLogger(err, "GetAllCandidateInfo")
 		return
 	} else if errors.Is(err, sql.ErrNoRows) {
 		g.JSON(http.StatusNotFound, gin.H{
 			"message": "Not matching data",
 		})
+		p.generateLogger(err, "GetAllCandidateInfo")
 		return
 	}
 	g.JSON(http.StatusInternalServerError, gin.H{
 		"message": "Something went wrong.",
 	})
+	p.generateLogger(err, "GetAllCandidateInfo")
 }
