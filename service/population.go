@@ -31,7 +31,7 @@ func (p *populationService) generateLogger(functionName string) *logrus.Entry {
 func (p *populationService) GetPopulationStatistics() (populationStatistic []model.PopulationResponseItem, err error) {
 	districts, err := p.repository.QueryAllDistrict()
 	if err != nil {
-		p.errorMessage(err, "QueryAllDistrict")
+		p.generateLogger("QueryAllDistrict")
 		return []model.PopulationResponseItem{}, err
 	}
 	for _, s := range districts {
@@ -39,17 +39,17 @@ func (p *populationService) GetPopulationStatistics() (populationStatistic []mod
 		districtName := s.Name
 		total, err := p.repository.QueryTotalPopulation(districtId)
 		if err != nil {
-			p.errorMessage(err, "QueryTotalPopulation")
+			p.generateLogger("QueryTotalPopulation")
 			return []model.PopulationResponseItem{}, err
 		}
 		haveRight, err := p.repository.QueryPeopleRightToVote(districtId)
 		if err != nil {
-			p.errorMessage(err, "QueryPeopleRightToVote")
+			p.generateLogger("QueryPeopleRightToVote")
 			return []model.PopulationResponseItem{}, err
 		}
 		commit, err := p.repository.QueryPeopleCommitedTheVote(districtId)
 		if err != nil {
-			p.errorMessage(err, "QueryPeopleCommitedTheVote")
+			p.generateLogger("QueryPeopleCommitedTheVote")
 			return []model.PopulationResponseItem{}, err
 		}
 		row := model.PopulationResponseItem{
@@ -61,16 +61,16 @@ func (p *populationService) GetPopulationStatistics() (populationStatistic []mod
 		}
 		populationStatistic = append(populationStatistic, row)
 	}
-	p.queryLog("return population statistic", "GetPopulationStatistics")
+	p.generateLogger("return population statistic")
 	return populationStatistic, nil
 }
 
 func (p *populationService) GetAllCandidateInfo() (candidates []model.PopulationDatabaseRow, err error) {
 	candidates, err = p.GetAllCandidateInfo()
 	if err != nil {
-		p.errorMessage(err, "GetAllCandidateInfo")
+		p.generateLogger("GetAllCandidateInfo")
 		return
 	}
-	p.queryLog("return all candidate informatiom", "GetPopulationStatistics")
+	p.generateLogger("GetPopulationStatistics")
 	return candidates, nil
 }
