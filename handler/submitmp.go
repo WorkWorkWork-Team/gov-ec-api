@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 
-	model "github.com/WorkWorkWork-Team/gov-ec-api/models"
+	"github.com/WorkWorkWork-Team/gov-ec-api/model"
 	"github.com/WorkWorkWork-Team/gov-ec-api/service"
 	"github.com/gin-gonic/gin"
 )

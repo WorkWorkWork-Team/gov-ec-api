@@ -3,7 +3,7 @@ package repository
 import (
 	"fmt"
 
-	model "github.com/WorkWorkWork-Team/gov-ec-api/models"
+	"github.com/WorkWorkWork-Team/gov-ec-api/model"
 	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
 )

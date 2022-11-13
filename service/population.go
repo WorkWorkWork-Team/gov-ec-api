@@ -1,7 +1,7 @@
 package service
 
 import (
-	model "github.com/WorkWorkWork-Team/gov-ec-api/models"
+	"github.com/WorkWorkWork-Team/gov-ec-api/model"
 	"github.com/WorkWorkWork-Team/gov-ec-api/repository"
 	"github.com/sirupsen/logrus"
 )
