@@ -18,6 +18,7 @@ type PopulationRepository interface {
 	QueryPeopleCommitedTheVote(districtId int) (int64, error)
 	QueryPeopleRightToVote(districtId int) (int64, error)
 	QueryCandidateByDistrict(districtId int) ([]model.PopulationDatabaseRow, error)
+	QueryAllCandidate() ([]model.PopulationDatabaseRow, error)
 }
 
 func NewPopulationRepository(mysql *sqlx.DB) PopulationRepository {
@@ -129,7 +130,7 @@ func (p *populationRepository) QueryCandidateByDistrict(districtId int) ([]model
 	return res, nil
 }
 
-func (p *populationRepository) QueryAllCandidate(districtId int) ([]model.PopulationDatabaseRow, error) {
+func (p *populationRepository) QueryAllCandidate() ([]model.PopulationDatabaseRow, error) {
 	res := []model.PopulationDatabaseRow{}
 	q := `
 	SELECT p.CitizenID, LazerID, Name, Lastname, Birthday, Nationality, DistrictID
