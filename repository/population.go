@@ -60,7 +60,7 @@ func (p *populationRepository) QueryTotalPopulation(districtId int) (int64, erro
 		logger.Error(err)
 		return res, err
 	}
-	logger.Info(fmt.Sprintf("Get total population districtId: %d", districtId))
+	logger.Info("Get total population districtId: ", districtId)
 	return res, nil
 
 }
