@@ -125,7 +125,7 @@ func (p *populationRepository) QueryCandidateByDistrict(districtId int) ([]model
 		logger.Error(err)
 		return res, err
 	}
-	logger.Info(fmt.Sprintf("Get all candidates from districtId: %d", districtId))
+	logger.Info("Get all candidates from districtId: ", districtId)
 	return res, nil
 }
 
