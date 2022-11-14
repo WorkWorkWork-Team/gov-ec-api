@@ -29,9 +29,10 @@ func (p *populationService) generateLogger(functionName string) *logrus.Entry {
 }
 
 func (p *populationService) GetPopulationStatistics() (populationStatistic []model.PopulationResponseItem, err error) {
+	logger := p.generateLogger("QueryAllDistrict")
 	districts, err := p.repository.QueryAllDistrict()
 	if err != nil {
-		p.generateLogger("QueryAllDistrict").Error(err)
+		logger.Error(err)
 		return []model.PopulationResponseItem{}, err
 	}
 	for _, s := range districts {
@@ -39,17 +40,17 @@ func (p *populationService) GetPopulationStatistics() (populationStatistic []mod
 		districtName := s.Name
 		total, err := p.repository.QueryTotalPopulation(districtId)
 		if err != nil {
-			p.generateLogger("QueryTotalPopulation").Error(err)
+			logger.Error(err)
 			return []model.PopulationResponseItem{}, err
 		}
 		haveRight, err := p.repository.QueryPeopleRightToVote(districtId)
 		if err != nil {
-			p.generateLogger("QueryTotalPopulation").Error(err)
+			logger.Error(err)
 			return []model.PopulationResponseItem{}, err
 		}
 		commit, err := p.repository.QueryPeopleCommitedTheVote(districtId)
 		if err != nil {
-			p.generateLogger("QueryPeopleCommitedTheVote").Error(err)
+			logger.Error(err)
 			return []model.PopulationResponseItem{}, err
 		}
 		row := model.PopulationResponseItem{
@@ -61,16 +62,17 @@ func (p *populationService) GetPopulationStatistics() (populationStatistic []mod
 		}
 		populationStatistic = append(populationStatistic, row)
 	}
-	p.generateLogger("GetPopulationStatistics").Info("return population statistics")
+	logger.Info("return population statistics")
 	return populationStatistic, nil
 }
 
 func (p *populationService) GetAllCandidateInfo() (candidates []model.PopulationDatabaseRow, err error) {
+	logger := p.generateLogger("GetAllCandidateInfo")
 	candidates, err = p.repository.QueryAllCandidate()
 	if err != nil {
-		p.generateLogger("GetAllCandidateInfo").Error(err)
+		logger.Error(err)
 		return
 	}
-	p.generateLogger("GetAllCandidateInfo").Info("return all candidate info")
+	logger.Info("return all candidate info")
 	return candidates, nil
 }

@@ -28,39 +28,41 @@ func (p *populationHandler) generateLogger(functionName string) *logrus.Entry {
 }
 
 func (p populationHandler) GetPopulationStatistics(g *gin.Context) {
+	logger := p.generateLogger("GetPopulationStatistics")
 	popData, err := p.service.GetPopulationStatistics()
 	if err == nil {
 		g.JSON(http.StatusOK, popData)
-		p.generateLogger("GetPopulationStatistics").Info("return population statistics")
+		logger.Info("return population statistics")
 		return
 	} else if errors.Is(err, sql.ErrNoRows) {
 		g.JSON(http.StatusNotFound, gin.H{
 			"message": "Not matching data",
 		})
-		p.generateLogger("GetPopulationStatistics").Error(err)
+		logger.Error(err)
 		return
 	}
 	g.JSON(http.StatusInternalServerError, gin.H{
 		"message": "Something went wrong.",
 	})
-	p.generateLogger("GetPopulationStatistics").Error(err)
+	logger.Error(err)
 }
 
 func (p populationHandler) GetAllCandidateInfo(g *gin.Context) {
+	logger := p.generateLogger("GetAllCandidateInfo")
 	popData, err := p.service.GetAllCandidateInfo()
 	if err == nil {
 		g.JSON(http.StatusOK, popData)
-		p.generateLogger("GetAllCandidateInfo").Info("return all candidate info")
+		logger.Info("return all candidate info")
 		return
 	} else if errors.Is(err, sql.ErrNoRows) {
 		g.JSON(http.StatusNotFound, gin.H{
 			"message": "Not matching data",
 		})
-		p.generateLogger("GetAllCandidateInfo").Error(err)
+		logger.Error(err)
 		return
 	}
 	g.JSON(http.StatusInternalServerError, gin.H{
 		"message": "Something went wrong.",
 	})
-	p.generateLogger("GetAllCandidateInfo").Error(err)
+	logger.Error(err)
 }
