@@ -84,7 +84,7 @@ func (p *populationRepository) QueryPeopleCommitedTheVote(districtId int) (int64
 		logger.Error(err)
 		return res, err
 	}
-	logger.Info(fmt.Sprintf("Get total people commited the vote districtId: %d", districtId))
+	logger.Info("Get total people commited the vote districtId: ", districtId)
 	return res, nil
 }
 
