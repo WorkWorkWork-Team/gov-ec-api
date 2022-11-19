@@ -29,19 +29,25 @@ func main() {
 		os.Exit(1)
 		return
 	}
+
 	// New Repository
 	populationRepository := repository.NewPopulationRepository(mysql)
+	submitMpRepository := repository.NewSubmitMpRepository(mysql)
 
+	// New Service
 	populationService := service.NewPopulationService(populationRepository)
+	submitmpService := service.NewSubmitmpService(submitMpRepository)
 
+	// New Handler
 	populationHandler := handler.NewPopulationHandler(populationService)
+	submitmpHandler := handler.NewSubmitMpHandler(submitmpService)
 
 	server := httpserver.NewHttpServer()
 	server.Use(handler.ValidateAPIKey(appConfig.API_KEY))
 	{
 		server.GET("/population/statistic/", populationHandler.GetPopulationStatistics)
+		server.POST("/mp/submit/", submitmpHandler.SubmitMp)
 		server.GET("/candidate/", populationHandler.GetAllCandidateInfo)
 	}
 	server.Run(fmt.Sprint(":", appConfig.LISTENING_PORT))
-
 }
