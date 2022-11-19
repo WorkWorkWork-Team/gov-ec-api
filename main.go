@@ -47,6 +47,7 @@ func main() {
 	{
 		server.GET("/population/statistic/", populationHandler.GetPopulationStatistics)
 		server.POST("/mp/submit/", submitmpHandler.SubmitMp)
+		server.GET("/candidate/", populationHandler.GetAllCandidateInfo)
 	}
 	server.Run(fmt.Sprint(":", appConfig.LISTENING_PORT))
 }

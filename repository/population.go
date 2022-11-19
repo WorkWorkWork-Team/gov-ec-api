@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"fmt"
-
 	"github.com/WorkWorkWork-Team/gov-ec-api/model"
 	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
@@ -17,6 +15,8 @@ type PopulationRepository interface {
 	QueryTotalPopulation(districtId int) (int64, error)
 	QueryPeopleCommitedTheVote(districtId int) (int64, error)
 	QueryPeopleRightToVote(districtId int) (int64, error)
+	QueryCandidateByDistrict(districtId int) ([]model.PopulationDatabaseRow, error)
+	QueryAllCandidate() ([]model.PopulationDatabaseRow, error)
 }
 
 func NewPopulationRepository(mysql *sqlx.DB) PopulationRepository {
@@ -25,33 +25,29 @@ func NewPopulationRepository(mysql *sqlx.DB) PopulationRepository {
 	}
 }
 
-func (p *populationRepository) queryLog(message string, functionName string) {
-	logrus.WithFields(logrus.Fields{
+func (p *populationRepository) generateLogger(functionName string) *logrus.Entry {
+	return logrus.WithFields(logrus.Fields{
 		"Module":  "Repository",
 		"Funtion": functionName,
-	}).Info(message)
-}
-
-func (p *populationRepository) errorMessage(err error, functionName string) {
-	logrus.WithFields(logrus.Fields{
-		"Module":  "Repository",
-		"Funtion": functionName,
-	}).Error(err)
+	})
 }
 
 func (p *populationRepository) QueryAllDistrict() ([]model.District, error) {
+	logger := p.generateLogger("QueryAllDistrict")
 	res := []model.District{}
 	q := `SELECT Name, DistrictID
 	FROM District`
 	err := p.mysql.Select(&res, q)
 	if err != nil {
-		p.errorMessage(err, "QueryAllDistrict")
+		logger.Error(err)
 		return res, err
 	}
-	p.queryLog("Select all district", "QueryAllDistrict")
+	logger.Info("Select all district")
 	return res, nil
 }
+
 func (p *populationRepository) QueryTotalPopulation(districtId int) (int64, error) {
+	logger := p.generateLogger("QueryTotalPopulation")
 	var res int64
 	q := `
 	SELECT COUNT(*) as Total
@@ -59,15 +55,16 @@ func (p *populationRepository) QueryTotalPopulation(districtId int) (int64, erro
 	WHERE DistrictId=?`
 	err := p.mysql.Get(&res, q, districtId)
 	if err != nil {
-		p.errorMessage(err, "QueryTotalPopulation")
+		logger.Error(err)
 		return res, err
 	}
-	p.queryLog(fmt.Sprintf("Get total population districtId: %d", districtId), "QueryTotalPopulation")
+	logger.Info("Get total population districtId: ", districtId)
 	return res, nil
 
 }
 
 func (p *populationRepository) QueryPeopleCommitedTheVote(districtId int) (int64, error) {
+	logger := p.generateLogger("QueryPeopleCommitedTheVote")
 	var res int64
 	q := `
 	SELECT COUNT(*) as Commits
@@ -82,14 +79,15 @@ func (p *populationRepository) QueryPeopleCommitedTheVote(districtId int) (int64
 	`
 	err := p.mysql.Get(&res, q, districtId)
 	if err != nil {
-		p.errorMessage(err, "QueryPeopleCommitedTheVote")
+		logger.Error(err)
 		return res, err
 	}
-	p.queryLog(fmt.Sprintf("Get total people commited the vote districtId: %d", districtId), "QueryPeopleCommitedTheVote")
+	logger.Info("Get total people commited the vote districtId: ", districtId)
 	return res, nil
 }
 
 func (p *populationRepository) QueryPeopleRightToVote(districtId int) (int64, error) {
+	logger := p.generateLogger("QueryPeopleRightToVote")
 	var res int64
 	q := `
 	SELECT COUNT(*) as HaveRight
@@ -103,10 +101,46 @@ func (p *populationRepository) QueryPeopleRightToVote(districtId int) (int64, er
 	`
 	err := p.mysql.Get(&res, q, districtId)
 	if err != nil {
-		p.errorMessage(err, "QueryPeopleRightToVote")
+		logger.Error(err)
 		return res, err
 	}
-	p.queryLog(fmt.Sprintf("Get total people have right to vote districtId: %d", districtId), "QueryPeopleRightToVote")
+	logger.Info("Get total people have right to vote districtId: ", districtId)
 	return res, nil
+}
 
+func (p *populationRepository) QueryCandidateByDistrict(districtId int) ([]model.PopulationDatabaseRow, error) {
+	logger := p.generateLogger("QueryCandidateByDistrict")
+	res := []model.PopulationDatabaseRow{}
+	q := `
+	SELECT p.CitizenID, LazerID, Name, Lastname, Birthday, Nationality, DistrictID
+	FROM Population AS p
+	JOIN Candidate AS c
+	ON p.CitizenID = c.CitizenID
+	WHERE p.DistrictID=?
+	`
+	err := p.mysql.Select(&res, q, districtId)
+	if err != nil {
+		logger.Error(err)
+		return res, err
+	}
+	logger.Info("Get all candidates from districtId: ", districtId)
+	return res, nil
+}
+
+func (p *populationRepository) QueryAllCandidate() ([]model.PopulationDatabaseRow, error) {
+	logger := p.generateLogger("QueryAllCandidate")
+	res := []model.PopulationDatabaseRow{}
+	q := `
+	SELECT p.CitizenID, LazerID, Name, Lastname, Birthday, Nationality, DistrictID
+	FROM Population AS p
+	JOIN Candidate AS c
+	ON p.CitizenID = c.CitizenID
+	`
+	err := p.mysql.Select(&res, q)
+	if err != nil {
+		logger.Error(err)
+		return res, err
+	}
+	logger.Info("Get all candidates")
+	return res, nil
 }
