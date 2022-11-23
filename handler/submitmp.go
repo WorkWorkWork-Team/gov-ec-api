@@ -31,6 +31,12 @@ func (a *submitmpHandler) SubmitMp(g *gin.Context) {
 	}
 	err = a.submitmpService.SubmitMp(mp.CitizenID)
 	if err != nil {
+		if err == service.ErrCitizenIDNotFound {
+			g.JSON(http.StatusBadRequest, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
 		g.JSON(http.StatusInternalServerError, gin.H{
 			"message": fmt.Sprint("Internal Server Error: ", err),
 		})
