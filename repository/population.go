@@ -17,6 +17,7 @@ type PopulationRepository interface {
 	QueryPeopleRightToVote(districtId int) (int64, error)
 	QueryCandidateByDistrict(districtId int) ([]model.PopulationDatabaseRow, error)
 	QueryAllCandidate() ([]model.PopulationDatabaseRow, error)
+	CheckIfPeopleExists(citizenID string) bool
 }
 
 func NewPopulationRepository(mysql *sqlx.DB) PopulationRepository {
@@ -44,6 +45,12 @@ func (p *populationRepository) QueryAllDistrict() ([]model.District, error) {
 	}
 	logger.Info("Select all district")
 	return res, nil
+}
+
+func (p *populationRepository) CheckIfPeopleExists(citizenID string) bool {
+	var result model.PopulationDatabaseRow
+	err := p.mysql.Get(&result, "SELECT * FROM `Population` WHERE citizenID=?", citizenID)
+	return err == nil
 }
 
 func (p *populationRepository) QueryTotalPopulation(districtId int) (int64, error) {

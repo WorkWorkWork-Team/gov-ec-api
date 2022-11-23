@@ -36,7 +36,7 @@ func main() {
 
 	// New Service
 	populationService := service.NewPopulationService(populationRepository)
-	submitmpService := service.NewSubmitmpService(submitMpRepository)
+	submitmpService := service.NewSubmitmpService(submitMpRepository, populationRepository)
 
 	// New Handler
 	populationHandler := handler.NewPopulationHandler(populationService)
