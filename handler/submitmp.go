@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/WorkWorkWork-Team/gov-ec-api/model"
@@ -18,14 +19,24 @@ func NewSubmitMpHandler(submitmpService service.SubmitmpService) submitmpHandler
 	}
 }
 
-var mp model.SubmitMp
-
 func (a *submitmpHandler) SubmitMp(g *gin.Context) {
-	g.BindJSON(&mp)
-	err := a.submitmpService.SubmitMp(mp.CitizenID)
+	var mp model.SubmitMp
+
+	err := g.BindJSON(&mp)
 	if err != nil {
-		g.Status(http.StatusInternalServerError)
+		g.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid request body.",
+		})
 		return
 	}
-	g.Status(http.StatusOK)
+	err = a.submitmpService.SubmitMp(mp.CitizenID)
+	if err != nil {
+		g.JSON(http.StatusInternalServerError, gin.H{
+			"message": fmt.Sprint("Internal Server Error: ", err),
+		})
+		return
+	}
+	g.JSON(http.StatusOK, gin.H{
+		"message": "success",
+	})
 }
