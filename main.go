@@ -42,12 +42,13 @@ func main() {
 	populationHandler := handler.NewPopulationHandler(populationService)
 	submitmpHandler := handler.NewSubmitMpHandler(submitmpService)
 
-	server := httpserver.NewHttpServer()
-	server.Use(handler.ValidateAPIKey(appConfig.API_KEY))
+	server := httpserver.NewHttpServer(appConfig.PROXY_URL)
+	api := server.Group(appConfig.PROXY_URL)
+	api.Use(handler.ValidateAPIKey(appConfig.API_KEY))
 	{
-		server.GET("/population/statistic/", populationHandler.GetPopulationStatistics)
-		server.POST("/mp/submit/", submitmpHandler.SubmitMp)
-		server.GET("/candidate/", populationHandler.GetAllCandidateInfo)
+		api.GET("/population/statistic/", populationHandler.GetPopulationStatistics)
+		api.POST("/mp/submit/", submitmpHandler.SubmitMp)
+		api.GET("/candidate/", populationHandler.GetAllCandidateInfo)
 	}
 	server.Run(fmt.Sprint(":", appConfig.LISTENING_PORT))
 }

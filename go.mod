@@ -3,7 +3,7 @@ module github.com/WorkWorkWork-Team/gov-ec-api
 go 1.19
 
 require (
-	github.com/WorkWorkWork-Team/common-go v0.3.2
+	github.com/WorkWorkWork-Team/common-go v0.3.3
 	github.com/gin-gonic/gin v1.8.1
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/joho/godotenv v1.4.0
