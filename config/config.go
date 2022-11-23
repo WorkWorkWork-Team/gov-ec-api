@@ -19,6 +19,7 @@ type Config struct {
 	MYSQL_PASSWORD string `envconfig:"MYSQL_PASSWORD"`
 	MYSQL_DATABASE string `envconfig:"MYSQL_DATABASE"`
 	API_KEY        string `envconfig:"API_KEY"`
+	PROXY_URL      string `envconfig:"PROXY_URL"`
 }
 
 func Load() Config {
