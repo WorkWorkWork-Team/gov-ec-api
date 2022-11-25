@@ -1,6 +1,8 @@
 package service_test
 
 import (
+	"database/sql"
+
 	"github.com/WorkWorkWork-Team/gov-ec-api/model"
 	"github.com/WorkWorkWork-Team/gov-ec-api/service"
 	"github.com/WorkWorkWork-Team/gov-ec-api/test/mock_repository"
@@ -55,16 +57,28 @@ var _ = Describe("Population", func() {
 	})
 
 	Describe("Get GetAllCandidateInfo", func() {
-		BeforeEach(func() {
-			out := []model.PopulationDatabaseRow{}
-			mockPopulationRepository.EXPECT().
-				QueryAllCandidate().
-				Return(out, nil)
+		Context("With right conditions", func() {
+			BeforeEach(func() {
+				out := []model.PopulationDatabaseRow{}
+				mockPopulationRepository.EXPECT().
+					QueryAllCandidate().
+					Return(out, nil)
 
+			})
+			It("Should not return error", func() {
+				res := []model.PopulationDatabaseRow{}
+				Expect(populationService.GetAllCandidateInfo()).Should(Equal(res))
+			})
 		})
-		It("Should not return error", func() {
-			res := []model.PopulationDatabaseRow{}
-			Expect(populationService.GetAllCandidateInfo()).Should(Equal(res))
+
+		Context("Query Not Found", func() {
+			It("Should raise ErrNoRows", func() {
+				mockPopulationRepository.EXPECT().QueryAllCandidate().Return([]model.PopulationDatabaseRow{}, sql.ErrNoRows)
+
+				Expect(populationService.GetAllCandidateInfo()).Error().Should(BeAssignableToTypeOf(sql.ErrNoRows))
+
+			})
 		})
+
 	})
 })
