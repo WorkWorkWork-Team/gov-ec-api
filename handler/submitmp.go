@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/WorkWorkWork-Team/gov-ec-api/model"
@@ -8,24 +9,40 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type submitmpHandler struct {
+type SubmitmpHandler struct {
 	submitmpService service.SubmitmpService
 }
 
-func NewSubmitMpHandler(submitmpService service.SubmitmpService) submitmpHandler {
-	return submitmpHandler{
+func NewSubmitMpHandler(submitmpService service.SubmitmpService) *SubmitmpHandler {
+	return &SubmitmpHandler{
 		submitmpService: submitmpService,
 	}
 }
 
-var mp model.SubmitMp
+func (a *SubmitmpHandler) SubmitMp(g *gin.Context) {
+	var mp model.SubmitMp
 
-func (a *submitmpHandler) SubmitMp(g *gin.Context) {
-	g.BindJSON(&mp)
-	err := a.submitmpService.SubmitMp(mp.CitizenID)
+	err := g.BindJSON(&mp)
 	if err != nil {
-		g.Status(http.StatusInternalServerError)
+		g.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid request body.",
+		})
 		return
 	}
-	g.Status(http.StatusOK)
+	err = a.submitmpService.SubmitMp(mp.CitizenID)
+	if err != nil {
+		if err == service.ErrCitizenIDNotFound {
+			g.JSON(http.StatusBadRequest, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+		g.JSON(http.StatusInternalServerError, gin.H{
+			"message": fmt.Sprint("Internal Server Error: ", err),
+		})
+		return
+	}
+	g.JSON(http.StatusOK, gin.H{
+		"message": "success",
+	})
 }
