@@ -10,24 +10,24 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type populationHandler struct {
+type PopulationHandler struct {
 	service service.PopulationService
 }
 
-func NewPopulationHandler(populationService service.PopulationService) populationHandler {
-	return populationHandler{
+func NewPopulationHandler(populationService service.PopulationService) *PopulationHandler {
+	return &PopulationHandler{
 		service: populationService,
 	}
 }
 
-func (p *populationHandler) generateLogger(functionName string) *logrus.Entry {
+func (p *PopulationHandler) generateLogger(functionName string) *logrus.Entry {
 	return logrus.WithFields(logrus.Fields{
 		"Module":  "Handler",
 		"Funtion": functionName,
 	})
 }
 
-func (p populationHandler) GetPopulationStatistics(g *gin.Context) {
+func (p PopulationHandler) GetPopulationStatistics(g *gin.Context) {
 	logger := p.generateLogger("GetPopulationStatistics")
 	popData, err := p.service.GetPopulationStatistics()
 	if err == nil {
@@ -47,7 +47,7 @@ func (p populationHandler) GetPopulationStatistics(g *gin.Context) {
 	logger.Error(err)
 }
 
-func (p populationHandler) GetAllCandidateInfo(g *gin.Context) {
+func (p PopulationHandler) GetAllCandidateInfo(g *gin.Context) {
 	logger := p.generateLogger("GetAllCandidateInfo")
 	popData, err := p.service.GetAllCandidateInfo()
 	if err == nil {

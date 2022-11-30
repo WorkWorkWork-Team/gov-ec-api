@@ -5,7 +5,7 @@ unit-test:
 	ginkgo -r --label-filter="unit"
 
 integration-test:
-        ginkgo -r --label-filter="integration"
+	ginkgo -r --label-filter="integration"
 
 start-dev-db-linux:
 	docker start mysql-dev || docker run --name mysql-dev -d \
