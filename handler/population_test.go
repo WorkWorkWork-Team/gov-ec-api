@@ -37,7 +37,7 @@ var _ = Describe("User Integration Test", Label("integration"), func() {
 
 					res := httptest.NewRecorder()
 					c, _ := gin.CreateTestContext(res)
-					c.Request = httptest.NewRequest(http.MethodPost, "/api", nil)
+					c.Request = httptest.NewRequest(http.MethodPost, "/population/statistic/", nil)
 					PopulationHandler.GetPopulationStatistics(c)
 					Expect(res.Result().StatusCode).To(Equal(http.StatusOK))
 				})
