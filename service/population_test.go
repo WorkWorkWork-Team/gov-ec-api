@@ -15,11 +15,13 @@ var _ = Describe("Population", func() {
 	var ctrl *gomock.Controller
 	var mockPopulationRepository *mock_repository.MockPopulationRepository
 	var populationService service.PopulationService
+
 	BeforeEach(func() {
 		ctrl = gomock.NewController(GinkgoT())
 		mockPopulationRepository = mock_repository.NewMockPopulationRepository(ctrl)
 		populationService = service.NewPopulationService(mockPopulationRepository)
 	})
+
 	Describe("Get pop stat", func() {
 		BeforeEach(func() {
 			dis := []model.District{}
