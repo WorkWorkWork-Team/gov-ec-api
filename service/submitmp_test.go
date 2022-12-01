@@ -23,18 +23,8 @@ var _ = Describe("Population", Label("unit"), func() {
 
 	Describe("Submit MP", func() {
 		Context("When person does exists", func() {
-			// var person *model.PopulationDatabaseRow
 
 			BeforeEach(func() {
-				// person = &model.PopulationDatabaseRow{
-				// 	CitizenID:   1,
-				// 	LazerID:     "1",
-				// 	Name:        "Johnny",
-				// 	Lastname:    "J",
-				// 	Birthday:    time.Date(2000, 1, 1, 0, 0, 0, 0, time.Local),
-				// 	Nationality: "eSan",
-				// 	DistrictID:  "101",
-				// }
 				mockPopulationRepository.EXPECT().CheckIfPeopleExists("1").Return(true)
 				mockSubmitmpRepository.EXPECT().SubmitMpToDB("1").Return(nil)
 			})
