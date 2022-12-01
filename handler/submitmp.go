@@ -9,17 +9,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type submitmpHandler struct {
+type SubmitmpHandler struct {
 	submitmpService service.SubmitmpService
 }
 
-func NewSubmitMpHandler(submitmpService service.SubmitmpService) submitmpHandler {
-	return submitmpHandler{
+func NewSubmitMpHandler(submitmpService service.SubmitmpService) *SubmitmpHandler {
+	return &SubmitmpHandler{
 		submitmpService: submitmpService,
 	}
 }
 
-func (a *submitmpHandler) SubmitMp(g *gin.Context) {
+func (a *SubmitmpHandler) SubmitMp(g *gin.Context) {
 	var mp model.SubmitMp
 
 	err := g.BindJSON(&mp)

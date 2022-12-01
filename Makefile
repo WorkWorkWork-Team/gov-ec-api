@@ -2,7 +2,10 @@ run:
 	ENV=dev go run main.go
 
 unit-test:
-	ginkgo -r
+	ginkgo -r --label-filter="unit"
+
+integration-test:
+	ginkgo -r --label-filter="integration"
 
 start-dev-db-linux:
 	docker start mysql-dev || docker run --name mysql-dev -d \
