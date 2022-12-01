@@ -13,7 +13,11 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Population Test", Label("integration"), func() {
+var (
+	PopulationHander *handler.PopulationHandler
+)
+
+var _ = Describe("User Integration Test", Label("integration"), func() {
 	BeforeEach(func() {
 		populationRepository := repository.NewPopulationRepository(MySQLConnection)
 		populationService := service.NewPopulationService(populationRepository)
@@ -43,6 +47,28 @@ var _ = Describe("Population Test", Label("integration"), func() {
 
 					// Expect 200
 					Expect(c.Writer.Status()).To(Equal(http.StatusOK))
+				})
+			})
+		})
+	})
+
+	Context("Population Info API", func() {
+		Context("Database have population data", func() {
+			When("Voter EC want to get Population INFO", func() {
+				It("should return success.", func() {
+					// Expect no user in voted table
+					var populationList []model.PopulationDatabaseRow
+					row := MySQLConnection.Select(&populationList, "SELECT * FROM Population")
+					Expect(row).ShouldNot(HaveOccurred())
+					populationLength := len(populationList)
+					Expect(populationLength).To(Equal(2))
+
+					res := httptest.NewRecorder()
+					c, _ := gin.CreateTestContext(res)
+					c.Request = httptest.NewRequest(http.MethodPost, "/population/statistic/", nil)
+					c.AddParam("CitizenID", TestUserCitizenID)
+					PopulationHandler.GetPopulationStatistics(c)
+					Expect(res.Result().StatusCode).To(Equal(http.StatusOK))
 				})
 			})
 		})
