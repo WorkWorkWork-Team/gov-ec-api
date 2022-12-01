@@ -20,5 +20,6 @@ func ValidateAPIKey(apiKey string) gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Authentication failed"})
 			return
 		}
+		c.AddParam("valid_test", "true")
 	}
 }
