@@ -1,7 +1,7 @@
 package service_test
 
 import (
-	"time"
+	"database/sql"
 
 	"github.com/WorkWorkWork-Team/gov-ec-api/model"
 	"github.com/WorkWorkWork-Team/gov-ec-api/service"
@@ -57,27 +57,29 @@ var _ = Describe("Population", func() {
 	})
 
 	Describe("Geting all candidates info", func() {
-		BeforeEach(func() {
-			candidate_list := []model.PopulationDatabaseRow{}
-			candidate := model.PopulationDatabaseRow{
-				CitizenID:   1,
-				LazerID:     "1",
-				Name:        "Johnny",
-				Lastname:    "J",
-				Birthday:    time.Now(),
-				Nationality: "eSan",
-				DistrictID:  "101",
-			}
-			candidate_list = append(candidate_list, candidate)
-			mockPopulationRepository.EXPECT().
-				QueryAllCandidate().
-				Return(candidate_list, nil)
-		})
-
 		Context("When right conditions", func() {
+			BeforeEach(func() {
+				mockPopulationRepository.EXPECT().
+					QueryAllCandidate().
+					Return([]model.PopulationDatabaseRow{}, nil)
+			})
+
 			It("Should not return error", func() {
 				_, err := populationService.GetAllCandidateInfo()
 				Expect(err).NotTo(HaveOccurred())
+			})
+		})
+
+		Context("When database error", func() {
+			BeforeEach(func() {
+				mockPopulationRepository.EXPECT().
+					QueryAllCandidate().
+					Return([]model.PopulationDatabaseRow{}, sql.ErrNoRows)
+			})
+
+			It("Should return error from the database", func() {
+				_, err := populationService.GetAllCandidateInfo()
+				Expect(err).Should(Equal(sql.ErrNoRows))
 			})
 		})
 	})
