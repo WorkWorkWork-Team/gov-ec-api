@@ -4,7 +4,6 @@ go 1.19
 
 require (
 	github.com/WorkWorkWork-Team/common-go v0.3.3
-	github.com/WorkWorkWork-Team/gov-voter-api v0.2.2
 	github.com/gin-gonic/gin v1.8.1
 	github.com/golang/mock v1.6.0
 	github.com/jmoiron/sqlx v1.3.5
@@ -38,7 +37,6 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/goccy/go-json v0.9.11 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
-	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect

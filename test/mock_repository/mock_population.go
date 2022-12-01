@@ -34,6 +34,20 @@ func (m *MockPopulationRepository) EXPECT() *MockPopulationRepositoryMockRecorde
 	return m.recorder
 }
 
+// CheckIfPeopleExists mocks base method.
+func (m *MockPopulationRepository) CheckIfPeopleExists(citizenID string) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CheckIfPeopleExists", citizenID)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// CheckIfPeopleExists indicates an expected call of CheckIfPeopleExists.
+func (mr *MockPopulationRepositoryMockRecorder) CheckIfPeopleExists(citizenID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckIfPeopleExists", reflect.TypeOf((*MockPopulationRepository)(nil).CheckIfPeopleExists), citizenID)
+}
+
 // QueryAllCandidate mocks base method.
 func (m *MockPopulationRepository) QueryAllCandidate() ([]model.PopulationDatabaseRow, error) {
 	m.ctrl.T.Helper()
