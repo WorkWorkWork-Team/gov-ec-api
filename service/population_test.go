@@ -11,7 +11,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Population", func() {
+var _ = Describe("Population", Label("unit"), func() {
 	var ctrl *gomock.Controller
 	var mockPopulationRepository *mock_repository.MockPopulationRepository
 	var populationService service.PopulationService
