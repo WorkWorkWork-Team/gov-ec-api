@@ -23,7 +23,6 @@ var _ = Describe("Population", Label("unit"), func() {
 
 	Describe("Submit MP", func() {
 		Context("When person does exists", func() {
-
 			BeforeEach(func() {
 				mockPopulationRepository.EXPECT().CheckIfPeopleExists("1").Return(true)
 				mockSubmitmpRepository.EXPECT().SubmitMpToDB("1").Return(nil)
